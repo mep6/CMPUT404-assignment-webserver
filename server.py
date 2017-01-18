@@ -1,14 +1,15 @@
-#  coding: utf-8 
+#  coding: utf-8
+import os
 import SocketServer
 
-# Copyright 2013 Abram Hindle, Eddie Antonio Santos
-# 
+# Copyright 2013 Abram Hindle, Eddie Antonio Santos, Michele Paulichuk
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,11 +29,57 @@ import SocketServer
 
 
 class MyWebServer(SocketServer.BaseRequestHandler):
-    
+    # send 405 error message for HTTP methods not handled
+    def send405(self):
+        header = "HTTP/1.1 405 Method Not Allowed \r\n"
+        self.request.sendall(header)
+
+    # send 404 error message for any path that does not exist
+    def send404(self):
+        header = "HTTP/1.1 404 Not Found \r\n"
+        self.request.sendall(header)
+
+    def send200(self, path) :
+        header = "HTTP/1.1 200 OK \r\n"
+
+        if (path.lower().endswith(".html")):
+            mimeType = "Content-Type: text/html \r\n"
+        elif (path.lower().endswith(".css")):
+            mimeType = "Content-Type: text/css \r\n"
+        else:
+            self.send404()
+
+        try:
+            data = open(path).read()
+            self.request.sendall(header + mimeType + data)
+        except:
+            self.send404()
+
+
     def handle(self):
+        print
         self.data = self.request.recv(1024).strip()
-        print ("Got a request of: %s\n" % self.data)
-        self.request.sendall("OK")
+        #print ("Got a request of: %s\n" % self.data)
+
+        requestData = self.data.split(" ")
+        requestMethod = requestData[0]
+
+        # Check if method is a valid method to handle
+        if (requestMethod == "GET"):
+            requestedFileLoc = requestData[1]
+            currentDir = os.getcwd()
+            fullPath = currentDir + "/www" + requestedFileLoc
+
+            # check if path exists
+            if (os.path.exists(fullPath)):
+                if (requestedFileLoc.endswith("/")) :
+                    fullPath += "index.html"
+
+                self.send200(fullPath)
+            else:
+                self.send404()
+        else:
+            self.send405()
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
