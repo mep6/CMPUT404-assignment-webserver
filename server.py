@@ -32,12 +32,14 @@ class MyWebServer(SocketServer.BaseRequestHandler):
     # send 405 error message for HTTP methods not handled
     def send405(self):
         header = "HTTP/1.1 405 Method Not Allowed \r\n"
-        self.request.sendall(header)
+        close = "Connection: close \r\n\r\n"
+        self.request.sendall(header + close)
 
     # send 404 error message for any path that does not exist
     def send404(self):
         header = "HTTP/1.1 404 Not Found \r\n"
-        self.request.sendall(header)
+        close = "Connection: close \r\n\r\n"
+        self.request.sendall(header + close)
 
     def send200(self, path) :
         header = "HTTP/1.1 200 OK \r\n"
@@ -51,7 +53,8 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
         try:
             data = open(path).read()
-            self.request.sendall(header + mimeType + data)
+            close = "Connection: close \r\n\r\n"
+            self.request.sendall(header + mimeType + close + data)
         except:
             self.send404()
 
