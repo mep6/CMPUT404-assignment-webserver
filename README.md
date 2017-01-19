@@ -24,6 +24,7 @@ Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
 Resources consulted:
+
 Ruslan Spivak, https://ruslanspivak.com/lsbaws-part1/
 
 Acme Systems, http://www.acmesystems.it/python_httpd
