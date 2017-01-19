@@ -25,16 +25,16 @@ compatible) http://docs.python.org/2/library/socketserver.html
 
 Resources consulted:
 
-Ruslan Spivak, https://ruslanspivak.com/lsbaws-part1/
+Ruslan Spivak, https://ruslanspivak.com/lsbaws-part1/, Date looked at:Jan. 18, 2017
 
-Acme Systems, http://www.acmesystems.it/python_httpd
+Acme Systems, http://www.acmesystems.it/python_httpd, Date looked at:Jan. 18, 2017
 
-https://docs.python.org/2/library/socketserver.html#module-SocketServer
+https://docs.python.org/2/library/socketserver.html#module-SocketServer, Date looked at:Jan. 18, 2017
 
-https://docs.python.org/2/library/socket.html?highlight=send#socket.socket.sendall
+https://docs.python.org/2/library/socket.html?highlight=send#socket.socket.sendall, Date looked at:Jan. 18, 2017
 
-https://docs.python.org/2/library/os.path.html
+https://docs.python.org/2/library/os.path.html, Date looked at:Jan. 18, 2017
 
-https://docs.python.org/2/library/os.html#os-file-dir
+https://docs.python.org/2/library/os.html#os-file-dir, Date looked at:Jan. 18, 2017
 
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type, Date looked at:Jan. 18, 2017
