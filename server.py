@@ -31,27 +31,33 @@ import SocketServer
 class MyWebServer(SocketServer.BaseRequestHandler):
     # send 405 error message for HTTP methods not handled
     def send405(self):
+	    #print("Sending 405 Method Not Allowed")
         header = "HTTP/1.1 405 Method Not Allowed \r\n"
         close = "Connection: close \r\n\r\n"
         self.request.sendall(header + close)
 
     # send 404 error message for any path that does not exist
     def send404(self):
+	    #print("Sending 404 Not Found")
         header = "HTTP/1.1 404 Not Found \r\n"
         close = "Connection: close \r\n\r\n"
         self.request.sendall(header + close)
-
+    # send 200 Ok message and server up the requested file
     def send200(self, path) :
+	    #print("Sending 200 OK")
         header = "HTTP/1.1 200 OK \r\n"
 
+        # Get mimeType of file to serve
         if (path.lower().endswith(".html")):
             mimeType = "Content-Type: text/html \r\n"
         elif (path.lower().endswith(".css")):
             mimeType = "Content-Type: text/css \r\n"
         else:
             self.send404()
-
+        
+        # Try to server the request back
         try:
+            print("Sending data at: %s" % path)
             data = open(path).read()
             close = "Connection: close \r\n\r\n"
             self.request.sendall(header + mimeType + close + data)
@@ -60,7 +66,6 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
 
     def handle(self):
-        print
         self.data = self.request.recv(1024).strip()
         #print ("Got a request of: %s\n" % self.data)
 
@@ -69,14 +74,15 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
         # Check if method is a valid method to handle
         if (requestMethod == "GET"):
-            requestedFileLoc = requestData[1]
+            #Grabbing absolute path of request to prevent retrieval of files outside application
+            requestedFileLoc = os.path.abspath(requestData[1])
             currentDir = os.getcwd()
             fullPath = currentDir + "/www" + requestedFileLoc
 
             # check if path exists
             if (os.path.exists(fullPath)):
-                if (requestedFileLoc.endswith("/")) :
-                    fullPath += "index.html"
+                if (not requestedFileLoc.endswith(tuple([".html",".css"]))):
+                    fullPath += "/index.html"
 
                 self.send200(fullPath)
             else:
